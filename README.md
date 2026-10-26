@@ -47,6 +47,23 @@ driven from the exchange to the LEDs:
 The candlestick charts are the one exception: they are loaded from the Binance
 REST API and refreshed every minute, which keeps the latest candle up to date.
 
+## Set up from your phone
+
+Crypto Matrix is set up like a smart home device: no keyboard, screen or SSH
+session is needed, everything happens in the companion app.
+
+1. **Pairing**: the app scans for the Bluetooth service of the matrix,
+   connects to it and remembers the device for the next launch.
+2. **Wi-Fi**: if the matrix is not online yet, the Pi scans for Wi-Fi networks
+   and sends them to the app. Pick one, enter the password on the phone, and
+   the Pi connects. It only counts as online once it can reach the Binance API.
+3. **Markets**: search all Binance markets, sorted by your preferred currency
+   and trading volume. Add up to 8, drag them into the order of the rows on
+   the matrix and swipe to remove them.
+4. **Everything else**: switch between the price rows and the chart by swiping
+   in the app, and change the brightness, chart timeframe, currency or Wi-Fi
+   network in the settings.
+
 ## Architecture
 
 ```
@@ -72,6 +89,25 @@ REST API and refreshed every minute, which keeps the latest candle up to date.
 | [`services/bluetooth/`](services/bluetooth) | Go | BLE GATT server (BlueZ) the app talks to. Translates app requests into calls to the other services. |
 | [`services/wifi/`](services/wifi) | Go | Scans for and connects to Wi-Fi networks via wpa_supplicant (`/run/crypto-matrix/wifi.sock`). |
 | [`deploy/systemd/`](deploy/systemd) | systemd | Unit files and installer that run the four services on boot. |
+
+### One schema for C++, Go and the app
+
+Every message in the system is defined once, as Protocol Buffers in
+[`proto/`](proto): markets, trades, candles and the gRPC services between the
+processes on the Pi. Each part uses the language that fits it best:
+
+- **C++** for the display, as the LED matrix library is written in C++ and
+  drives the panels in real time. CMake generates the protobuf sources at build
+  time.
+- **Go** for the networking services, using the generated code in
+  [`proto/gen/go`](proto/gen/go).
+- **Flutter** for the app. It talks JSON over Bluetooth, which the bluetooth
+  service decodes straight into the same protobuf messages using the official
+  JSON mapping, and the app mirrors those messages in its Dart models.
+
+Adding a field to a market therefore only means changing one `.proto` file
+for everything that runs on the Pi, only the Dart models of the app have to be
+updated by hand.
 
 ## Hardware
 
@@ -108,8 +144,8 @@ rows).
    ```
 
 The services install to `/opt/crypto-matrix/<service>` and run as
-`crypto-matrix-<service>.service`. Each Go service reads optional settings from
-a `.env` file in its working directory, see the `.env.example` files.
+`crypto-matrix-<service>.service`. They work without any configuration, see
+[Configuration](#configuration) for the available settings.
 
 Only the display service runs as root, as it needs access to the GPIO pins. The
 other services run as the unprivileged `crypto-matrix` user, which the
@@ -118,6 +154,37 @@ installer creates. On top of that, the bluetooth service gets the
 service the `netdev` group to talk to wpa_supplicant. The services communicate
 over Unix sockets in `/run/crypto-matrix`, which only the `crypto-matrix` group
 can access, and keep their state in `/var/lib/crypto-matrix`.
+
+## Configuration
+
+All settings have defaults that match the systemd units, so nothing needs to be
+configured. The Go services read optional settings from a `.env` file in their
+working directory (`/opt/crypto-matrix/<service>/.env`), see the
+`.env.example` files. Some examples:
+
+```sh
+# market-data: log debug output and enable gRPC reflection, e.g. for grpcurl
+DEBUG=true
+```
+
+```sh
+# bluetooth: name the matrix advertises, and the adapter to use
+APP_NAME=crypto-matrix
+ADAPTER_ID=hci0
+# Base of the Bluetooth service UUIDs, has to match the app
+BASE_UUID_PREFIX=d551
+BASE_UUID_SUFFIX=-fa5e-4343-b3f6-7c77b90d6e0f
+```
+
+```sh
+# Any service: where the gRPC sockets are, e.g. to run a service by hand
+GRPC_PATH=/run/crypto-matrix/market-data.sock
+DISPLAY_SERVICE_GRPC_PATH=unix:///run/crypto-matrix/display.sock
+```
+
+Variables set in the systemd units, like `STATE_PATH`, take precedence over the
+`.env` files. The display service reads `GRPC_PATH` and `STATE_PATH` from its
+environment only.
 
 ## Regenerating the protobuf code
 
