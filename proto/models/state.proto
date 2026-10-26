@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "market.proto";
+import "interval.proto";
+
+package models;
+option go_package = "github.com/DZDomi/crypto-matrix/proto/gen/go/grpc_models";
+
+message State {
+  repeated models.Market markets = 1;
+  models.Timeframe timeframe = 2;
+}

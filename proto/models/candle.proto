@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package models;
+option go_package = "github.com/DZDomi/crypto-matrix/proto/gen/go/grpc_models";
+
+message Candle {
+  string open = 1;
+  string high = 2;
+  string low = 3;
+  string close = 4;
+  string volume = 5;
+  string volumeQuote = 6;
+}

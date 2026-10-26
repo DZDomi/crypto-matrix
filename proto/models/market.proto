@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+import "pair.proto";
+import "interval.proto";
+
+package models;
+option go_package = "github.com/DZDomi/crypto-matrix/proto/gen/go/grpc_models";
+
+enum Exchange {
+  Binance = 0;
+  Kraken = 1;
+  Bitpanda = 2;
+}
+
+message Market {
+  Exchange exchange = 2;
+  Pair pair = 3;
+  bool active = 4;
+  string volume = 5;
+  string volumeQuote = 6;
+  uint32 row = 7;
+  string price = 8;
+  repeated Interval intervals = 9;
+}

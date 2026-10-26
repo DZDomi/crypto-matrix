@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+
+import "design.proto";
+import "market.proto";
+import "interval.proto";
+
+package blt;
+option go_package = "github.com/DZDomi/crypto-matrix/proto/gen/go/services/blt";
+
+enum Error {
+  // Default value
+  NoError = 0;
+
+  // Request errors (similar to 4xx)
+  InvalidJson = 10;
+
+  // Server errors (similar to 5xx)
+  ServerError = 20;
+}
+
+message Response {
+  bool success = 1;
+  Error error = 2;
+  google.protobuf.Any message = 3;
+}
+
+// Info
+
+message GetMarketStateResponse {
+  repeated models.Market markets = 1;
+}
+
+// Ticker
+
+message SetBrightnessRequest {
+  uint32 brightness = 1;
+}
+
+message SetDesignRequest {
+  models.Design design = 1;
+}
+
+message UpdateMarketsRequest {
+  repeated models.Market markets = 1;
+}
+
+message SetTimeframeRequest {
+  models.Timeframe timeframe = 1;
+}
+
+// Wifi
+
+message WifiStatusResponse {
+  bool connected = 1;
+}
+
+message WifiConnectRequest {
+  string ssid = 1;
+  string password = 2;
+}
+message WifiConnectResponse {
+  bool connected = 1;
+}

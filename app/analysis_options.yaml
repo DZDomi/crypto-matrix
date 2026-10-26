@@ -1,0 +1,24 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+
+linter:
+  rules:
+    # Matches the existing code style of the app
+    unnecessary_this: false
+    constant_identifier_names: false
+    non_constant_identifier_names: false
+    prefer_interpolation_to_compose_strings: false
+    unnecessary_new: false
+    prefer_initializing_formals: false
+    library_private_types_in_public_api: false
+    use_super_parameters: false
+    use_key_in_widget_constructors: false
+    prefer_const_constructors_in_immutables: false
+    sort_child_properties_last: false
+    avoid_function_literals_in_foreach_calls: false
+    prefer_for_elements_to_map_fromiterable: false

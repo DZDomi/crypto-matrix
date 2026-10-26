@@ -1,0 +1,21 @@
+[Unit]
+Description=Crypto Matrix Market Data
+Wants=crypto-matrix-display.service
+After=crypto-matrix-display.service
+# Always restart it
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/crypto-matrix/market-data
+ExecStart=/opt/crypto-matrix/market-data/bin/market-data
+Restart=always
+User=crypto-matrix
+Group=crypto-matrix
+UMask=0007
+NoNewPrivileges=yes
+StateDirectory=crypto-matrix/market-data
+Environment=STATE_PATH=/var/lib/crypto-matrix/market-data/state.json
+
+[Install]
+WantedBy=default.target

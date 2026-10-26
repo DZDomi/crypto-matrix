@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package models;
+option go_package = "github.com/DZDomi/crypto-matrix/proto/gen/go/grpc_models";
+
+message Asset {
+  string symbol = 2;
+  string name = 3;
+  bool fiat = 4;
+}

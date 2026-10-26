@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+import "trade.proto";
+import "design.proto";
+import "market.proto";
+import "interval.proto";
+
+package ledmatrix;
+option go_package = "github.com/DZDomi/crypto-matrix/proto/gen/go/services/ledmatrix";
+
+service LedMatrixService {
+  rpc Status(StatusRequest) returns (StatusResponse);
+  rpc ReceiveTrade(ReceiveTradeRequest) returns (ReceiveTradeResponse);
+  rpc ReceiveOHLCUpdate(ReceiveOHLCUpdateRequest) returns (ReceiveOHLCUpdateResponse);
+  rpc SetDesign(SetDesignRequest) returns (SetDesignResponse);
+  rpc SetBrightness(SetBrightnessRequest) returns (SetBrightnessResponse);
+  rpc EmptyRow(EmptyRowRequest) returns (EmptyRowResponse);
+  rpc Clear(ClearRequest) returns (ClearResponse);
+}
+
+message StatusRequest {}
+message StatusResponse {
+  bool success = 1;
+}
+
+message ReceiveTradeRequest {
+  repeated models.Trade trades = 1;
+}
+message ReceiveTradeResponse {}
+
+message ReceiveOHLCUpdateRequest {
+  models.Market market = 1;
+  models.Interval interval = 2;
+}
+message ReceiveOHLCUpdateResponse {}
+
+message SetDesignRequest {
+  models.Design design = 1;
+}
+message SetDesignResponse {
+  bool success = 1;
+}
+
+message SetBrightnessRequest {
+  int32 brightness = 1;
+}
+message SetBrightnessResponse {
+  bool success = 1;
+}
+
+message EmptyRowRequest {
+  int32 row = 1;
+}
+message EmptyRowResponse {
+  bool success = 1;
+}
+
+message ClearRequest {}
+message ClearResponse {
+  bool success = 1;
+}

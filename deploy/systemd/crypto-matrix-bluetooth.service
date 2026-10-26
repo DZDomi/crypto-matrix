@@ -1,0 +1,24 @@
+[Unit]
+Description=Crypto Matrix Bluetooth
+Wants=crypto-matrix-wifi.service crypto-matrix-display.service crypto-matrix-market-data.service
+After=bluetooth.target crypto-matrix-wifi.service crypto-matrix-display.service crypto-matrix-market-data.service
+# Always restart it
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/crypto-matrix/bluetooth
+ExecStart=/opt/crypto-matrix/bluetooth/bin/bluetooth
+Restart=always
+User=crypto-matrix
+Group=crypto-matrix
+# Allows talking to BlueZ over D-Bus on older systems
+SupplementaryGroups=bluetooth
+# Required by btmgmt to power the adapter and switch it to LE mode
+AmbientCapabilities=CAP_NET_ADMIN
+CapabilityBoundingSet=CAP_NET_ADMIN
+UMask=0007
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=default.target

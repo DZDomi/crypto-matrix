@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "asset.proto";
+
+package models;
+option go_package = "github.com/DZDomi/crypto-matrix/proto/gen/go/grpc_models";
+
+message Pair {
+  string symbol = 1;
+  Asset base = 2;
+  Asset quote = 3;
+}

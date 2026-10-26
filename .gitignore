@@ -1,0 +1,20 @@
+# OS / IDE
+.DS_Store
+.idea/
+*.iml
+.vscode/
+
+# Local configuration
+.env
+
+# Go service binaries (built by install.sh)
+services/market-data/market-data
+services/bluetooth/bluetooth
+services/wifi/wifi
+
+# market-data runtime state
+services/market-data/state.json
+
+# CMake
+services/display/build/
+services/display/cmake-build-*/

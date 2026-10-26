@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+import "network.proto";
+
+package wifi;
+option go_package = "github.com/DZDomi/crypto-matrix/proto/gen/go/services/wifi";
+
+service WifiService {
+  rpc Status(StatusRequest) returns (StatusResponse);
+  rpc Scan(ScanRequest) returns (ScanResponse);
+  rpc Connect(ConnectRequest) returns (ConnectResponse);
+  rpc Disconnect(DisconnectRequest) returns (DisconnectResponse);
+}
+
+message StatusRequest {}
+message StatusResponse {
+  bool connected = 1;
+  models.Network network = 2;
+}
+
+message ScanRequest {}
+message ScanResponse {
+  repeated models.Network networks = 1;
+}
+
+message ConnectRequest {
+  models.Network network = 1;
+}
+message ConnectResponse {
+  bool connected = 1;
+}
+
+message DisconnectRequest {
+  models.Network network = 1;
+}
+message DisconnectResponse {
+  bool disconnected = 1;
+}

@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+import "market.proto";
+import "interval.proto";
+
+package streams;
+option go_package = "github.com/DZDomi/crypto-matrix/proto/gen/go/services/streams";
+
+service StreamService {
+  rpc Status(StatusRequest) returns (StatusResponse);
+  rpc SubscribeToMarkets(SubscribeToMarketsRequest) returns (SubscribeToMarketsResponse);
+  rpc UnsubscribeToMarkets(UnsubscribeToMarketsRequest) returns (UnsubscribeToMarketsResponse);
+  rpc ResetMarkets(ResetMarketsRequest) returns (ResetMarketsResponse);
+  rpc SetTimeframe(SetTimeframeRequest) returns (SetTimeframeResponse);
+  rpc SendOHLC(SendOHLCRequest) returns (SendOHLCResponse);
+  rpc SendLatestTrade(SendLatestTradeRequest) returns (SendLatestTradeResponse);
+}
+
+message StatusRequest {}
+message StatusResponse {
+  bool connected = 1;
+  repeated models.Market markets = 2;
+}
+
+message SubscribeToMarketsRequest {
+  repeated models.Market markets = 1;
+}
+message SubscribeToMarketsResponse {
+  bool success = 1;
+  repeated models.Market markets = 2;
+}
+
+message UnsubscribeToMarketsRequest {
+  repeated models.Market markets = 2;
+}
+message UnsubscribeToMarketsResponse {
+  bool success = 1;
+  repeated models.Market subscribedMarkets = 2;
+}
+
+message ResetMarketsRequest {}
+message ResetMarketsResponse {
+  bool success = 1;
+}
+
+message SetTimeframeRequest {
+  models.Timeframe timeframe = 1;
+}
+
+message SetTimeframeResponse {
+  bool success = 1;
+}
+
+message SendOHLCRequest {}
+
+message SendOHLCResponse {
+  bool success = 1;
+}
+
+message SendLatestTradeRequest {}
+
+message SendLatestTradeResponse {
+  bool success = 1;
+}

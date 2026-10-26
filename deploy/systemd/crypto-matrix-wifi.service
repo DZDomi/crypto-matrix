@@ -1,0 +1,19 @@
+[Unit]
+Description=Crypto Matrix Wifi
+# Always restart it
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/crypto-matrix/wifi
+ExecStart=/opt/crypto-matrix/wifi/bin/wifi
+Restart=always
+User=crypto-matrix
+Group=crypto-matrix
+# Allows talking to wpa_supplicant over D-Bus
+SupplementaryGroups=netdev
+UMask=0007
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+import "candle.proto";
+
+package models;
+option go_package = "github.com/DZDomi/crypto-matrix/proto/gen/go/grpc_models";
+
+// TODO: Add more
+enum Timeframe {
+  Minute = 0;
+  FiveMinutes = 1;
+  ThirtyMinutes = 2;
+  Hour = 3;
+  SixHours =4;
+  Day = 5;
+  Week = 6;
+  Month = 7;
+}
+
+message Interval {
+  Timeframe timeframe = 1;
+  repeated Candle candles = 2;
+}

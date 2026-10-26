@@ -1,0 +1,19 @@
+[Unit]
+Description=Crypto Matrix Display
+# Always restart it
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/crypto-matrix/display
+ExecStart=/opt/crypto-matrix/display/bin/display
+Restart=always
+# Root is required to access the GPIO pins of the LED matrix
+User=root
+Group=crypto-matrix
+UMask=0007
+StateDirectory=crypto-matrix/display
+Environment=STATE_PATH=/var/lib/crypto-matrix/display/display.state
+
+[Install]
+WantedBy=default.target
