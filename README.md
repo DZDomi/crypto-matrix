@@ -209,8 +209,3 @@ generates its C++ sources itself when it is built.
 ## License
 
 The source code in this repository is licensed under the [MIT License](LICENSE).
-
-The display service links against
-[rpi-rgb-led-matrix](https://github.com/hzeller/rpi-rgb-led-matrix), which is
-licensed under the GPL-2.0-or-later. A compiled `display` binary is therefore a
-combined work that has to be distributed under the terms of the GPL.
