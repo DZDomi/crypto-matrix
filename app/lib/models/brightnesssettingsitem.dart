@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:crypto_matrix/models/settingsitem.dart';
 import 'package:crypto_matrix/util.dart';
 import 'package:crypto_matrix/util/blt_com.dart';
@@ -11,14 +9,10 @@ class BrightnessSettingsItem extends SettingsItem {
 
   double _brightness = 50.0;
 
-  // TODO: Cancel timer on return from view
-  int _timePassedInMilliseconds = 0;
+  static const Duration _updateInterval = Duration(milliseconds: 100);
+  DateTime _lastUpdate = DateTime.fromMillisecondsSinceEpoch(0);
 
-  BrightnessSettingsItem(String text) : super(text) {
-    Timer.periodic(Duration(milliseconds: 100), (_) {
-      _timePassedInMilliseconds = _timePassedInMilliseconds + 100;
-    });
-  }
+  BrightnessSettingsItem(String text) : super(text);
 
   @override
   Widget? buildTitle(BuildContext context, SetStateCallback callback) {
@@ -51,11 +45,16 @@ class BrightnessSettingsItem extends SettingsItem {
                   callback(() {
                     this._brightness = value;
                   });
-                  if (_timePassedInMilliseconds > 25) {
-                    callback(() {
-                      _setBrightness(value.round());
-                    });
-                    _timePassedInMilliseconds = 0;
+                  final now = DateTime.now();
+                  if (now.difference(_lastUpdate) >= _updateInterval) {
+                    _lastUpdate = now;
+                    _setBrightness(value.round());
+                  }
+                },
+                // Always send the final value, it might have been throttled
+                onChangeEnd: (double value) {
+                  if (this._bltCom.isConnectedToDevice()) {
+                    _setBrightness(value.round());
                   }
                 },
                 min: 0,

@@ -63,7 +63,7 @@ func (client *BinanceClient) SubscribeToMarket(market *grpc_models.Market) (chan
 	return client.add(market, func(marketToConnect *grpc_models.Market, timeframe grpc_models.Timeframe) (chan *grpc_models.Trade, chan struct{}, *grpc_models.Trade, chan *OHLC, *time.Ticker, chan struct{}, *OHLC, error) {
 		tradeChannel := make(chan *grpc_models.Trade)
 		ohlcChannel := make(chan *OHLC)
-		ohlcUpdate := time.NewTicker(timeFrameMappings[client.timeframe])
+		ohlcUpdate := time.NewTicker(ohlcUpdateInterval)
 		ohlcUpdateStop := make(chan struct{})
 
 		latestTrade, err := client.getLatestTrade(marketToConnect)
@@ -157,7 +157,6 @@ func (client *BinanceClient) tradeHandler(event *binance.WsTradeEvent) {
 	connectedMarket.Trades <- trade
 }
 
-// TODO: ??
 func (client *BinanceClient) errorHandler(err error) {
 	binanceLogger.WithError(err).Error("error from ws subscribe")
 }

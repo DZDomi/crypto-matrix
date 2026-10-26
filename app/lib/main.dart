@@ -41,7 +41,6 @@ void main() async {
 class CryptoMatrix extends StatelessWidget {
   final SharedPreferences prefs;
 
-  // TODO: Select default currency on startup
   CryptoMatrix(SharedPreferences p) : this.prefs = p {
     // this.prefs.remove(SharedPreferencesConst.INTRO_FINISHED);
     // this.prefs.remove(SharedPreferencesConst.BLT_COM_DEVICE_UUID);

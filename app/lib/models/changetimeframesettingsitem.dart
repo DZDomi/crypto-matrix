@@ -11,10 +11,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ChangeTimeframeSettingsItem extends SettingsItem {
   final BltCom _bltCom = BltCom.instance;
 
+  SetStateCallback? _callback;
+
   ChangeTimeframeSettingsItem(String text) : super(text);
 
   @override
   Widget? buildTitle(BuildContext context, SetStateCallback callback) {
+    _callback = callback;
     return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -60,7 +63,8 @@ class ChangeTimeframeSettingsItem extends SettingsItem {
     if (Util.checkStateAndShowAlert(context, this._bltCom)) {
       return;
     }
-    Navigator.pushNamed(context, RouteNames.SETTINGS_TIMEFRAME);//, arguments: new ChangeTimeframeScreenArguments(_itemSelected));
+    // Rebuild the settings when returning, so the new timeframe is shown
+    Navigator.pushNamed(context, RouteNames.SETTINGS_TIMEFRAME).then((_) => _callback?.call(() {}));
   }
 
   // void _itemSelected() async {

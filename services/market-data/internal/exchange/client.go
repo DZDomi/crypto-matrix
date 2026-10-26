@@ -12,17 +12,9 @@ import (
 	"github.com/DZDomi/crypto-matrix/proto/gen/go/grpc_models"
 )
 
-// TODO: think about this, maybe just update every minute anyway
-var timeFrameMappings = map[grpc_models.Timeframe]time.Duration{
-	grpc_models.Timeframe_Minute:        time.Minute,
-	grpc_models.Timeframe_FiveMinutes:   5 * time.Minute,
-	grpc_models.Timeframe_ThirtyMinutes: 30 * time.Minute,
-	grpc_models.Timeframe_Hour:          time.Hour,
-	grpc_models.Timeframe_SixHours:      6 * time.Hour,
-	grpc_models.Timeframe_Day:           24 * time.Hour,
-	grpc_models.Timeframe_Week:          7 * 24 * time.Hour,
-	grpc_models.Timeframe_Month:         30 * 24 * time.Hour,
-}
+// The candles are refreshed every minute independent of the timeframe, so the
+// latest candle of the chart stays up to date
+const ohlcUpdateInterval = time.Minute
 
 var logger = log.WithField("service", "websocket/exchange-client")
 
@@ -161,7 +153,7 @@ func (client *client) updateTimeframe(timeframe grpc_models.Timeframe, startPeri
 	for _, connectedMarket := range client.connectedMarkets {
 		connectedMarket.OHLCUpdate.Stop()
 		connectedMarket.OHLCUpdateStop <- struct{}{}
-		connectedMarket.OHLCUpdate = time.NewTicker(timeFrameMappings[timeframe])
+		connectedMarket.OHLCUpdate = time.NewTicker(ohlcUpdateInterval)
 		go startPeriodicUpdate(connectedMarket.Market, connectedMarket.OHLC, connectedMarket.OHLCUpdate, connectedMarket.OHLCUpdateStop)
 	}
 }

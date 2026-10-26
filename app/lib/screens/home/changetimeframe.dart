@@ -45,18 +45,18 @@ class _ChangeTimeframeScreenState extends State<ChangeTimeframeScreen> {
   Future<void> _onTimeframeSelected(TimeFrame timeframe) async {
     bool success = await widget._bltCom.setTimeframe(timeframe);
 
-    if (success) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setInt(
-          SharedPreferencesConst.SETTINGS_TIMEFRAME, timeframe.index);
-    } else {
-      // TODO: Handle error
+    if (!success) {
+      if (mounted) {
+        Util.showErrorAlert(context, "Unable to change timeframe");
+      }
+      return;
     }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(
+        SharedPreferencesConst.SETTINGS_TIMEFRAME, timeframe.index);
     if (!mounted) {
       return;
     }
     Navigator.pop(context);
-    // TODO: Fix not updating
-    // widget._itemSelectedCallback();
   }
 }

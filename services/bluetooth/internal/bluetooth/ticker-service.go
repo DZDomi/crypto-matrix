@@ -63,13 +63,11 @@ func onWriteSetBrightness(_ *bluetoothService.Char, value []byte) ([]byte, error
 	if success {
 		return handleSuccessResponse()
 	} else {
-		//TODO: not sure about this
 		_, resp := handleErrorWithResponse(errors.New("unable to set brightness"), blt.Error_ServerError)
 		return resp, nil
 	}
 }
 
-// TODO: Error handling
 func onWriteSetDesign(_ *bluetoothService.Char, value []byte) ([]byte, error) {
 	request := &blt.SetDesignRequest{}
 	if isError, response := parseMessage(value, request); isError {
@@ -83,8 +81,13 @@ func onWriteSetDesign(_ *bluetoothService.Char, value []byte) ([]byte, error) {
 	//if isError, response := handleErrorWithResponse(err, ServerError); isError {
 	//	return response, nil
 	//}
+	style := request.GetDesign().GetStyle()
+	if _, ok := grpc_models.Design_Style_name[int32(style)]; !ok {
+		_, response := handleErrorWithResponse(errors.New("invalid design style"), blt.Error_InvalidJson)
+		return response, nil
+	}
 	design := &grpc_models.Design{
-		Style: request.Design.Style,
+		Style: style,
 	}
 	success, err := displayclient.SetDesign(design)
 	if isError, response := handleErrorWithResponse(err, blt.Error_ServerError); isError {
@@ -120,9 +123,6 @@ func onWriteSetDesign(_ *bluetoothService.Char, value []byte) ([]byte, error) {
 		if isError, response := handleErrorWithResponse(err, blt.Error_ServerError); isError {
 			return response, nil
 		}
-		break
-	default:
-		logger.Panic("invalid design style")
 		break
 	}
 

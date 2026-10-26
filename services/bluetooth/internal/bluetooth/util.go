@@ -22,7 +22,6 @@ func handleErrorWithoutResponse(err interface{}) bool {
 		return false
 	}
 
-	//TODO
 	logger.WithField("err", err).Error("handleErrorWithoutResponse")
 	return true
 }
@@ -32,7 +31,6 @@ func handleErrorWithResponse(err interface{}, message blt.Error) (bool, []byte) 
 		return false, nil
 	}
 
-	// TODO:?
 	logger.WithField("err", err).Error("handleErrorWithResponse")
 
 	// Ignore error here because this can never fail :tm:

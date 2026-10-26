@@ -25,6 +25,7 @@ class LedMatrix {
     public:
 
         static const int MAX_LINES = 8;
+        static const int CANDLE_WIDTH = 3;
 
         static LedMatrix* getInstance();
         LedMatrix(LedMatrix const&) = delete;

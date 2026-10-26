@@ -301,6 +301,7 @@ class BltCom {
       await this._write('ticker', 'update-markets', _prepareRequest(UpdateMarketsRequest(markets)));
     } catch (e) {
       debugPrint(e.toString());
+      return false;
     }
     return true;
   }

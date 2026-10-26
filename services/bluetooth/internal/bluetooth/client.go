@@ -140,7 +140,6 @@ func (client *Client) startAdvertising() error {
 	go func(t *time.Timer) {
 		select {
 		case <-t.C:
-			// TODO
 			must.Succeed(client.startAdvertising())
 			break
 		case <-client.stopTimer:
@@ -180,7 +179,6 @@ func (client *Client) getConnectedDevices() ([]*device.Device1, error) {
 
 func (client *Client) checkForConnectedDevices() {
 	connectedDevices, err := client.getConnectedDevices()
-	//TODO ?
 	must.Succeed(err)
 	if len(connectedDevices) > 0 && client.cancelAdvertisement != nil {
 		client.cancelAdvertise()
@@ -215,11 +213,9 @@ func (client *Client) refreshTimer() {
 
 func (client *Client) disconnect() {
 	connectedDevices, err := client.getConnectedDevices()
-	//TODO?
 	must.Succeed(err)
 	for _, connectedDevice := range connectedDevices {
 		err = connectedDevice.Disconnect()
-		//TODO?
 		must.Succeed(err)
 	}
 	must.Succeed(client.startAdvertising())

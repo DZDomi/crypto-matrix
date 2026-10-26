@@ -271,7 +271,6 @@ class _OverviewScreenState extends State<OverviewScreen> {
         this._markets = newList;
       });
       return true;
-      // TODO: Else does not work
     } else {
       // In case something goes wrong we set it back to the original
       setState(() {

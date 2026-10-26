@@ -35,7 +35,6 @@ class _AssetListWidgetState extends State<AssetListWidget> {
             itemCount: widget._assets.length,
             itemBuilder: (context, index) {
               final AssetItem item = widget._assets[index];
-              // TODO: Handle non deletable
               return ListTile(
                 tileColor: Colors.white,
                 leading: FutureBuilder<Image>(

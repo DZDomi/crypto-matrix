@@ -32,10 +32,8 @@ class WifiNetworkItem implements ListItem {
   WifiNetworkItem(this.network);
 
   @override
-  Widget? buildSubtitle(BuildContext context, SetStateCallback callback) =>
-      Text(this.network.ssid);
+  Widget? buildSubtitle(BuildContext context, SetStateCallback callback) => null;
 
-  //TODO
   @override
   Widget? buildTitle(BuildContext context, SetStateCallback callback) =>
       Text(this.network.ssid);

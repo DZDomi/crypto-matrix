@@ -50,8 +50,7 @@ LedMatrix::~LedMatrix() {
 
 void LedMatrix::printChart(models::Interval interval) {
 
-    //TODO: Put into consts
-    int candleWith = 3;
+    const int candleWith = CANDLE_WIDTH;
     auto candles = interval.mutable_candles();
 
     if (interval.candles_size() > this->canvas->width() / candleWith) {

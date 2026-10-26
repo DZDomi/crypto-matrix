@@ -15,36 +15,13 @@ class Binance {
   };
 
   static Future<List<Market>> getMarkets() async {
-    // TODO: parallel
     final cache = await APICache.get();
 
-    String infoResponse;
-    final cachedInfoResponse = await cache.getContents(endpoints["info"]!);
-    if (cachedInfoResponse != null) {
-      infoResponse = cachedInfoResponse;
-    } else {
-      final response = await http.get(Uri.parse(endpoints["info"]!));
-      if (response.statusCode != 200) {
-        throw new Exception("Unable to load data from binance, got response code: " + response.statusCode.toString());
-      }
-      infoResponse = response.body;
-      await cache.putContents(endpoints["info"]!, infoResponse);
-    }
-
-    String volumeResponse;
-    final cachedVolumeResponse = await cache.getContents(endpoints["volume"]!);
-    if (cachedVolumeResponse != null) {
-      volumeResponse = cachedVolumeResponse;
-    } else {
-      final response = await http.get(Uri.parse(endpoints["volume"]!));
-      if (response.statusCode != 200) {
-        throw new Exception("Unable to load data from binance, got response code: " + response.statusCode.toString());
-      }
-      volumeResponse = response.body;
-      await cache.putContents(endpoints["volume"]!, volumeResponse);
-    }
-
-    final names = await CoinGecko.getAssets();
+    final (infoResponse, volumeResponse, names) = await (
+      _getCached(cache, endpoints["info"]!),
+      _getCached(cache, endpoints["volume"]!),
+      CoinGecko.getAssets(),
+    ).wait;
 
     try {
       final volumes = Map.fromIterable(jsonDecode(volumeResponse),
@@ -56,6 +33,19 @@ class Binance {
       debugPrint("error in parsing binance response: " + e.toString());
       rethrow;
     }
+  }
+
+  static Future<String> _getCached(APICache cache, String url) async {
+    final cached = await cache.getContents(url);
+    if (cached != null) {
+      return cached;
+    }
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode != 200) {
+      throw new Exception("Unable to load data from binance, got response code: " + response.statusCode.toString());
+    }
+    await cache.putContents(url, response.body);
+    return response.body;
   }
 
   static Market parseMarketFromSymbol(Map<String, Asset> names, Map<String, dynamic> volumes, dynamic element) {
