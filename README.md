@@ -1,5 +1,22 @@
 # Crypto Matrix
 
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <a href="docs/media/demo-2x2-panels.mp4"><img src="docs/media/demo-2x2-panels.gif" width="280" alt="Crypto Matrix with four LED panels showing live prices and candlestick charts"></a>
+      <br>
+      <b>Four panels (64×64)</b>: adding markets in the app, then switching to the candlestick charts
+    </td>
+    <td align="center" width="50%">
+      <a href="docs/media/demo-2x1-panels.mp4"><img src="docs/media/demo-2x1-panels.gif" width="280" alt="Crypto Matrix with two LED panels showing live prices and a candlestick chart"></a>
+      <br>
+      <b>Two panels (64×32)</b>: the same app with a wide two panel setup
+    </td>
+  </tr>
+</table>
+
+The previews play at 1.5x speed, click them to watch the full videos.
+
 A Raspberry Pi powered RGB LED matrix that shows live cryptocurrency prices and
 candlestick charts, configured from a companion app over Bluetooth LE.
 
@@ -11,13 +28,6 @@ candlestick charts, configured from a companion app over Bluetooth LE.
   the app, no keyboard or screen needed on the Pi.
 
 Market data comes from the public Binance API, no API key is required.
-
-> **Project status**: Crypto Matrix ran on real hardware in 2021 and 2022. For
-> open sourcing it, the code was updated to current toolchains and
-> dependencies, but this updated version has not been run on a Raspberry Pi
-> with LED panels again. Expect some rough edges, for example the Wi-Fi setup
-> talks to wpa_supplicant directly, while current Raspberry Pi OS releases
-> manage Wi-Fi with NetworkManager. Issues and pull requests are welcome.
 
 ## Real time, trade by trade
 
@@ -35,27 +45,7 @@ driven from the exchange to the LEDs:
   as it happens instead of a 24 hour change.
 
 The candlestick charts are the one exception: they are loaded from the Binance
-REST API and refreshed once per chart timeframe, as a candle only changes at
-that interval anyway.
-
-## Demo
-
-<table>
-  <tr>
-    <td align="center" width="50%">
-      <a href="docs/media/demo-2x2-panels.mp4"><img src="docs/media/demo-2x2-panels.gif" width="280" alt="Crypto Matrix with four LED panels showing live prices and candlestick charts"></a>
-      <br>
-      <b>Four panels (64×64)</b>: adding markets in the app, then switching to the candlestick charts
-    </td>
-    <td align="center" width="50%">
-      <a href="docs/media/demo-2x1-panels.mp4"><img src="docs/media/demo-2x1-panels.gif" width="280" alt="Crypto Matrix with two LED panels showing live prices and a candlestick chart"></a>
-      <br>
-      <b>Two panels (64×32)</b>: the same app with a wide two panel setup
-    </td>
-  </tr>
-</table>
-
-The previews are sped up, click them to watch the full videos.
+REST API and refreshed every minute, which keeps the latest candle up to date.
 
 ## Architecture
 
